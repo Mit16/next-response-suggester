@@ -1,0 +1,29 @@
+{
+  "name": "next-response-suggester",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "prompt-lab"
+  ],
+  "scripts": {
+    "lab:dev": "npm run dev --workspace=@next-response/prompt-lab",
+    "lab:build": "npm run build --workspace=@next-response/prompt-lab",
+    "lab:test": "npm run test --workspace=@next-response/prompt-lab",
+    "lab:typecheck": "npm run typecheck --workspace=@next-response/prompt-lab"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "groq-sdk": "^1.6.0",
+    "pino": "^10.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
