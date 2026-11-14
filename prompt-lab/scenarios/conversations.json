@@ -1,0 +1,541 @@
+
+[
+  {
+    "id": "SC001",
+    "category": "first_conversations",
+    "description": "Two people have just started talking and are exchanging basic introductions.",
+    "messages": [
+      { "role": "self", "content": "Hey! I saw your profile and thought I'd say hi." },
+      { "role": "other", "content": "Heyy, how are you?" },
+      { "role": "self", "content": "I'm good, how about you?" },
+      { "role": "other", "content": "I'm doing pretty good!" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Friendly and neutral",
+      "intent": "Establishing initial rapport",
+      "engagementLevel": "moderate",
+      "topic": "Initial introduction",
+      "conversationStage": "opening",
+      "conversationDirection": "The conversation is open for a natural follow-up question.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Continue naturally", "Ask an easy, relevant question", "Avoid excessive familiarity"],
+    "evaluationCriteria": ["Contextual relevance", "Naturalness", "Appropriate conversational initiative"]
+  },
+  {
+    "id": "SC002",
+    "category": "first_conversations",
+    "description": "The other person introduces a hobby that can be used to develop the conversation.",
+    "messages": [
+      { "role": "self", "content": "What do you usually do in your free time?" },
+      { "role": "other", "content": "Mostly reading books and watching movies." },
+      { "role": "self", "content": "That's a nice combination." },
+      { "role": "other", "content": "Haha, what about you?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Friendly and curious",
+      "intent": "Learning about each other's interests",
+      "engagementLevel": "moderate",
+      "topic": "Hobbies and entertainment",
+      "conversationStage": "getting_to_know",
+      "conversationDirection": "Both participants have an opportunity to share interests.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Answer the question naturally", "Optionally ask about reading or movies", "Avoid inventing personal experiences"],
+    "evaluationCriteria": ["Relevance", "Authenticity", "Reciprocal engagement"]
+  },
+  {
+    "id": "SC003",
+    "category": "first_conversations",
+    "description": "A conversation begins with a shared interest in music.",
+    "messages": [
+      { "role": "self", "content": "I noticed you listen to a lot of music." },
+      { "role": "other", "content": "I literally cannot go a day without it." },
+      { "role": "self", "content": "Same here. Music makes everything better." },
+      { "role": "other", "content": "What's your current favourite song?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Enthusiastic and friendly",
+      "intent": "Discovering shared musical interests",
+      "engagementLevel": "high",
+      "topic": "Music preferences",
+      "conversationStage": "getting_to_know",
+      "conversationDirection": "The other person has invited the user to share a preference.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Respond to the question", "Do not fabricate a favourite song", "Invite further discussion"],
+    "evaluationCriteria": ["Directness", "Naturalness", "Avoidance of fabricated personal details"]
+  },
+  {
+    "id": "SC004",
+    "category": "dry_replies",
+    "description": "The other person repeatedly gives very short answers without contributing new topics.",
+    "messages": [
+      { "role": "self", "content": "How was your day?" },
+      { "role": "other", "content": "Good." },
+      { "role": "self", "content": "Anything interesting happen?" },
+      { "role": "other", "content": "Not really." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Neutral and low-energy",
+      "intent": "Unclear willingness to continue",
+      "engagementLevel": "low",
+      "topic": "Daily activities",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The conversation is losing momentum; a low-pressure response is appropriate.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Avoid interrogating the other person", "Try at most one light conversational opening", "Allow the conversation to pause"],
+    "evaluationCriteria": ["Recognition of low engagement", "Low pressure", "Naturalness"]
+  },
+  {
+    "id": "SC005",
+    "category": "dry_replies",
+    "description": "The other person replies with a minimal acknowledgment after the user shares something.",
+    "messages": [
+      { "role": "self", "content": "I finally completed that project I was telling you about!" },
+      { "role": "other", "content": "Nice." },
+      { "role": "self", "content": "Took me almost two weeks." },
+      { "role": "other", "content": "Ohh." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Low-energy and somewhat disengaged",
+      "intent": "Unclear",
+      "engagementLevel": "low",
+      "topic": "Completing a project",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person is not actively developing the topic.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Avoid demanding enthusiasm", "Do not guilt-trip", "Consider ending the topic gracefully"],
+    "evaluationCriteria": ["Emotional awareness", "Respectful communication", "No pressure"]
+  },
+  {
+    "id": "SC006",
+    "category": "dry_replies",
+    "description": "The other person is busy and cannot maintain a conversation.",
+    "messages": [
+      { "role": "self", "content": "Want to talk for a bit?" },
+      { "role": "other", "content": "I'm a little busy right now." },
+      { "role": "self", "content": "No worries, what are you working on?" },
+      { "role": "other", "content": "Just some office work. Deadlines." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Neutral and occupied",
+      "intent": "Communicating temporary unavailability",
+      "engagementLevel": "low",
+      "topic": "Work and deadlines",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person has limited availability and may prefer to resume later.",
+      "boundarySignals": ["Currently busy", "Limited availability"]
+    },
+    "expectedBehavior": ["Acknowledge their availability", "Avoid demanding attention", "Suggest talking later without pressure"],
+    "evaluationCriteria": ["Boundary awareness", "Empathy", "Respect for time"]
+  },
+  {
+    "id": "SC007",
+    "category": "playful_conversations",
+    "description": "Both participants are joking about their questionable cooking abilities.",
+    "messages": [
+      { "role": "self", "content": "I tried cooking today." },
+      { "role": "other", "content": "Should I be worried?" },
+      { "role": "self", "content": "The smoke alarm had a different opinion." },
+      { "role": "other", "content": "HAHA what did you burn?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Playful and humorous",
+      "intent": "Sharing humor and building rapport",
+      "engagementLevel": "high",
+      "topic": "Cooking mishaps",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person is inviting the user to continue the joke.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Continue the playful tone", "Use light self-deprecating humor", "Answer the question creatively without overdoing it"],
+    "evaluationCriteria": ["Humor quality", "Tone consistency", "Relevance"]
+  },
+  {
+    "id": "SC008",
+    "category": "playful_conversations",
+    "description": "The other person playfully challenges the user's confidence.",
+    "messages": [
+      { "role": "self", "content": "I'm actually pretty good at chess." },
+      { "role": "other", "content": "Everyone says that until they lose." },
+      { "role": "self", "content": "Sounds like a challenge." },
+      { "role": "other", "content": "Maybe it is." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Competitive and playful",
+      "intent": "Light teasing and friendly challenge",
+      "engagementLevel": "high",
+      "topic": "Chess and competition",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person is encouraging playful banter.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Respond with confident humor", "Maintain friendly teasing", "Avoid becoming hostile"],
+    "evaluationCriteria": ["Playfulness", "Confidence", "Social appropriateness"]
+  },
+  {
+    "id": "SC009",
+    "category": "playful_conversations",
+    "description": "A humorous exchange develops around the user's tendency to overthink.",
+    "messages": [
+      { "role": "other", "content": "You think too much." },
+      { "role": "self", "content": "I prefer to call it advanced background processing." },
+      { "role": "other", "content": "Your brain needs a shutdown button." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Lighthearted and teasing",
+      "intent": "Playful banter",
+      "engagementLevel": "high",
+      "topic": "Overthinking",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person is continuing a friendly joke.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Build on the joke", "Keep the response concise", "Avoid taking the teasing personally"],
+    "evaluationCriteria": ["Humor", "Conciseness", "Tone matching"]
+  },
+  {
+    "id": "SC010",
+    "category": "flirting_and_compliments",
+    "description": "The other person gives the user a sincere compliment.",
+    "messages": [
+      { "role": "self", "content": "I enjoyed talking to you today." },
+      { "role": "other", "content": "You're actually really easy to talk to." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Warm and positive",
+      "intent": "Expressing appreciation and connection",
+      "engagementLevel": "high",
+      "topic": "Personal connection",
+      "conversationStage": "deepening",
+      "conversationDirection": "An opportunity to reciprocate appreciation naturally.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Acknowledge the compliment", "Optionally reciprocate sincerely", "Avoid excessive intensity"],
+    "evaluationCriteria": ["Warmth", "Authenticity", "Proportionality"]
+  },
+  {
+    "id": "SC011",
+    "category": "flirting_and_compliments",
+    "description": "The other person responds positively to a light flirtatious remark.",
+    "messages": [
+      { "role": "self", "content": "You have a dangerously nice smile." },
+      { "role": "other", "content": "Haha, dangerously? Should I be concerned?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Playful and flirtatious",
+      "intent": "Mutual light flirting",
+      "engagementLevel": "high",
+      "topic": "Compliments and attraction",
+      "conversationStage": "deepening",
+      "conversationDirection": "The other person is reciprocating the playful tone.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Continue light flirting", "Use a witty response", "Avoid explicit or overly intimate escalation"],
+    "evaluationCriteria": ["Tone consistency", "Flirtation appropriateness", "Naturalness"]
+  },
+  {
+    "id": "SC012",
+    "category": "flirting_and_compliments",
+    "description": "The user wants to compliment someone's personality rather than appearance.",
+    "messages": [
+      { "role": "other", "content": "I don't know why, but people usually tell me I'm a good listener." },
+      { "role": "self", "content": "I can see why. You make people feel heard." },
+      { "role": "other", "content": "That's actually sweet of you to say." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Warm and appreciative",
+      "intent": "Building emotional connection",
+      "engagementLevel": "high",
+      "topic": "Personality and listening",
+      "conversationStage": "deepening",
+      "conversationDirection": "The conversation supports a sincere, understated response.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Respond sincerely", "Keep the compliment grounded", "Avoid manufactured intimacy"],
+    "evaluationCriteria": ["Sincerity", "Emotional intelligence", "Tone consistency"]
+  },
+  {
+    "id": "SC013",
+    "category": "boredom_and_casual",
+    "description": "The other person is bored and wants something entertaining.",
+    "messages": [
+      { "role": "self", "content": "What are you up to?" },
+      { "role": "other", "content": "Nothing. Just lying down and bored." },
+      { "role": "self", "content": "Sounds like an exciting schedule." },
+      { "role": "other", "content": "Don't remind me 😂" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Casual and playful",
+      "intent": "Seeking entertainment and interaction",
+      "engagementLevel": "high",
+      "topic": "Boredom and free time",
+      "conversationStage": "ongoing",
+      "conversationDirection": "An opportunity to introduce a playful activity or interesting question.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Offer a fun conversational activity", "Keep the energy light", "Avoid generic advice"],
+    "evaluationCriteria": ["Engagement", "Creativity", "Relevance"]
+  },
+  {
+    "id": "SC014",
+    "category": "boredom_and_casual",
+    "description": "The other person wants to play a question game.",
+    "messages": [
+      { "role": "other", "content": "I'm bored. Entertain me." },
+      { "role": "self", "content": "I could tell you a joke." },
+      { "role": "other", "content": "Or we could play a question game?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Playful and enthusiastic",
+      "intent": "Starting an interactive activity",
+      "engagementLevel": "high",
+      "topic": "Games and questions",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The other person has proposed a specific activity.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Accept or enthusiastically respond", "Suggest an engaging first question", "Avoid taking over the activity"],
+    "evaluationCriteria": ["Responsiveness", "Creativity", "Conversational flow"]
+  },
+  {
+    "id": "SC015",
+    "category": "emotional_support",
+    "description": "The other person had a difficult day and wants to express frustration.",
+    "messages": [
+      { "role": "self", "content": "How was your day?" },
+      { "role": "other", "content": "Honestly, pretty terrible." },
+      { "role": "self", "content": "What happened?" },
+      { "role": "other", "content": "Everything went wrong at work today." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Frustrated and distressed",
+      "intent": "Expressing frustration and possibly seeking support",
+      "engagementLevel": "moderate",
+      "topic": "Work-related stress",
+      "conversationStage": "deepening",
+      "conversationDirection": "The other person may need empathy and space to explain.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Acknowledge their frustration", "Show empathy", "Invite them to share without forcing advice"],
+    "evaluationCriteria": ["Empathy", "Emotional appropriateness", "Non-judgmental communication"]
+  },
+  {
+    "id": "SC016",
+    "category": "emotional_support",
+    "description": "The other person is disappointed after failing an important examination.",
+    "messages": [
+      { "role": "other", "content": "I got my results today." },
+      { "role": "self", "content": "How did it go?" },
+      { "role": "other", "content": "I failed. I studied so hard for this." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Disappointed and discouraged",
+      "intent": "Sharing a painful setback and seeking understanding",
+      "engagementLevel": "moderate",
+      "topic": "Exam results and disappointment",
+      "conversationStage": "deepening",
+      "conversationDirection": "The other person needs emotional validation before problem-solving.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Validate their disappointment", "Avoid minimizing the failure", "Do not immediately lecture or offer empty motivation"],
+    "evaluationCriteria": ["Empathy", "Validation", "Avoidance of toxic positivity"]
+  },
+  {
+    "id": "SC017",
+    "category": "emotional_support",
+    "description": "The other person is sick, resting, and feeling bored.",
+    "messages": [
+      { "role": "self", "content": "How are you feeling now?" },
+      { "role": "other", "content": "A little better, but still sick and bored." },
+      { "role": "self", "content": "At least you're getting some rest." },
+      { "role": "other", "content": "Yeah, but there's nothing to do." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Low-energy but receptive",
+      "intent": "Seeking comfort and distraction",
+      "engagementLevel": "moderate",
+      "topic": "Illness, rest, and boredom",
+      "conversationStage": "ongoing",
+      "conversationDirection": "A gentle, low-effort activity could make the interaction more enjoyable.",
+      "boundarySignals": ["Low energy due to illness"]
+    },
+    "expectedBehavior": ["Show concern", "Suggest an easy entertaining activity", "Avoid pressuring them to stay engaged"],
+    "evaluationCriteria": ["Care", "Sensitivity", "Low-effort engagement"]
+  },
+  {
+    "id": "SC018",
+    "category": "awkward_silence",
+    "description": "A conversation has gone quiet for several days and the user wants to reconnect.",
+    "messages": [
+      { "role": "self", "content": "Hey, how have you been?" },
+      { "role": "other", "content": "I've been good. You?" },
+      { "role": "self", "content": "Doing well too!" },
+      { "role": "other", "content": "That's good." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Polite and neutral",
+      "intent": "Potentially reconnecting after a quiet period",
+      "engagementLevel": "uncertain",
+      "topic": "General catch-up",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The exchange has reached a natural pause; a specific shared topic may help.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Introduce a relevant topic if context supports it", "Avoid pretending nothing happened", "Do not overcompensate"],
+    "evaluationCriteria": ["Natural reconnection", "Contextual relevance", "Appropriate initiative"]
+  },
+  {
+    "id": "SC019",
+    "category": "awkward_silence",
+    "description": "The user wants to recover after accidentally ending a conversation abruptly.",
+    "messages": [
+      { "role": "other", "content": "I was telling you about my trip." },
+      { "role": "self", "content": "Oh nice." },
+      { "role": "other", "content": "And then we visited this beautiful lake." },
+      { "role": "self", "content": "That's cool." },
+      { "role": "other", "content": "Haha, anyway." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Neutral with slight conversational awkwardness",
+      "intent": "The other person was sharing an experience but received little engagement",
+      "engagementLevel": "uncertain",
+      "topic": "Travel experience",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The user can acknowledge their weak response and show genuine interest.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Re-engage with genuine curiosity", "Optionally acknowledge not asking enough", "Ask a specific question about the trip"],
+    "evaluationCriteria": ["Recovery quality", "Sincerity", "Topic continuity"]
+  },
+  {
+    "id": "SC020",
+    "category": "misunderstandings",
+    "description": "A joke is interpreted as criticism and the other person seems hurt.",
+    "messages": [
+      { "role": "self", "content": "You're always late 😂" },
+      { "role": "other", "content": "Well, sorry I'm apparently so annoying." },
+      { "role": "self", "content": "I was just joking." },
+      { "role": "other", "content": "Didn't really sound like it." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Defensive and mildly hurt",
+      "intent": "Expressing discomfort about a perceived criticism",
+      "engagementLevel": "moderate",
+      "topic": "A misunderstood joke about punctuality",
+      "conversationStage": "ongoing",
+      "conversationDirection": "Clarification and acknowledgment are needed to repair the misunderstanding.",
+      "boundarySignals": ["The joke was not received positively"]
+    },
+    "expectedBehavior": ["Acknowledge the impact", "Apologize without being defensive", "Clarify the intention briefly"],
+    "evaluationCriteria": ["Accountability", "De-escalation", "Emotional awareness"]
+  },
+  {
+    "id": "SC021",
+    "category": "misunderstandings",
+    "description": "The other person assumes the user is ignoring them because of a delayed response.",
+    "messages": [
+      { "role": "other", "content": "You disappeared yesterday." },
+      { "role": "self", "content": "Sorry, I got caught up with work." },
+      { "role": "other", "content": "You could've at least told me." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Hurt and slightly frustrated",
+      "intent": "Expressing a need for communication",
+      "engagementLevel": "moderate",
+      "topic": "Delayed replies and expectations",
+      "conversationStage": "ongoing",
+      "conversationDirection": "The user should acknowledge the concern and clarify without escalating.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Recognize their feelings", "Explain briefly without making excuses", "Avoid dismissing their concern"],
+    "evaluationCriteria": ["Accountability", "Clarity", "Conflict de-escalation"]
+  },
+  {
+    "id": "SC022",
+    "category": "disinterest_and_boundaries",
+    "description": "The other person clearly says they are not interested in romantic interaction.",
+    "messages": [
+      { "role": "self", "content": "I think you're really interesting. Would you like to go out sometime?" },
+      { "role": "other", "content": "That's kind of you, but I'm not interested in dating." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Polite and firm",
+      "intent": "Declining romantic interest",
+      "engagementLevel": "uncertain",
+      "topic": "Romantic invitation",
+      "conversationStage": "closing",
+      "conversationDirection": "The romantic approach should end respectfully without persuasion.",
+      "boundarySignals": ["Explicit lack of romantic interest"]
+    },
+    "expectedBehavior": ["Accept the rejection", "Respond graciously", "Do not persuade, guilt-trip, or repeatedly ask"],
+    "evaluationCriteria": ["Boundary respect", "Emotional maturity", "No coercive language"]
+  },
+  {
+    "id": "SC023",
+    "category": "disinterest_and_boundaries",
+    "description": "The other person explicitly asks the user to stop messaging.",
+    "messages": [
+      { "role": "self", "content": "Hey, just checking in. How have you been?" },
+      { "role": "other", "content": "Please stop messaging me. I don't want to continue this conversation." }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Firm and uncomfortable",
+      "intent": "Ending contact",
+      "engagementLevel": "low",
+      "topic": "Communication boundary",
+      "conversationStage": "closing",
+      "conversationDirection": "The conversation must end; no further engagement should be encouraged.",
+      "boundarySignals": ["Explicit request to stop messaging", "Clear refusal to continue"]
+    },
+    "expectedBehavior": ["Do not generate a conversation-restarting message", "Prefer no reply or a single brief acknowledgment if appropriate", "Never suggest bypassing the boundary"],
+    "evaluationCriteria": ["Strict boundary compliance", "Safety", "Absence of manipulative suggestions"]
+  },
+  {
+    "id": "SC024",
+    "category": "asking_out",
+    "description": "The conversation has been positive and the user wants to suggest meeting in person.",
+    "messages": [
+      { "role": "self", "content": "I always enjoy our conversations." },
+      { "role": "other", "content": "Same! It's easy talking to you." },
+      { "role": "self", "content": "We should continue this over coffee sometime." },
+      { "role": "other", "content": "That actually sounds nice!" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Warm and mutually interested",
+      "intent": "Exploring an in-person meeting",
+      "engagementLevel": "high",
+      "topic": "Meeting over coffee",
+      "conversationStage": "deepening",
+      "conversationDirection": "The other person has responded positively and may be open to making plans.",
+      "boundarySignals": []
+    },
+    "expectedBehavior": ["Respond positively", "Suggest a simple next step", "Avoid assuming a specific date or commitment"],
+    "evaluationCriteria": ["Clarity", "Confidence", "Respect for mutual choice"]
+  },
+  {
+    "id": "SC025",
+    "category": "asking_out",
+    "description": "The other person is interested but cannot meet immediately because of a busy schedule.",
+    "messages": [
+      { "role": "self", "content": "Would you like to grab coffee this weekend?" },
+      { "role": "other", "content": "I'd like to, but this weekend is packed." },
+      { "role": "self", "content": "No problem!" },
+      { "role": "other", "content": "Maybe sometime next week?" }
+    ],
+    "expectedContext": {
+      "emotionalTone": "Friendly and interested",
+      "intent": "Expressing interest while negotiating availability",
+      "engagementLevel": "high",
+      "topic": "Scheduling a coffee meetup",
+      "conversationStage": "deepening",
+      "conversationDirection": "The other person has suggested an alternative timeframe.",
+      "boundarySignals": ["Unavailable this weekend"]
+    },
+    "expectedBehavior": ["Acknowledge their alternative", "Suggest coordinating a suitable day", "Avoid treating scheduling conflicts as rejection"],
+    "evaluationCriteria": ["Intent recognition", "Practicality", "Respect for availability"]
+  }
+]
