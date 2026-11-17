@@ -66,10 +66,17 @@ export interface ResponseSuggestion {
   explanation: string;
 }
 
-export interface SuggestionResult {
-  context: ConversationContext;
-  suggestions: ResponseSuggestion[];
-}
+export type SuggestionResult =
+  | {
+    status: "suggestions";
+    context: ConversationContext;
+    suggestions: ResponseSuggestion[];
+  }
+  | {
+    status: "no_action";
+    context: ConversationContext;
+    reason: string;
+  };
 
 export interface ExpectedContext {
   emotionalTone: string;

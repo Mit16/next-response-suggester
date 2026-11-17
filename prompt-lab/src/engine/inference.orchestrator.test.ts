@@ -86,10 +86,7 @@ function createEngines() {
 
 describe("InferenceOrchestrator", () => {
   it("should execute analysis and generation successfully", async () => {
-    const {
-      analyzer,
-      generator,
-    } = createEngines();
+    const { analyzer, generator } = createEngines();
 
     const orchestrator = new InferenceOrchestrator(
       analyzer,
@@ -98,7 +95,10 @@ describe("InferenceOrchestrator", () => {
 
     const result = await orchestrator.execute(input);
 
+    expect(result.status).toBe("suggestions");
+
     expect(result).toEqual({
+      status: "suggestions",
       context,
       suggestions,
     });

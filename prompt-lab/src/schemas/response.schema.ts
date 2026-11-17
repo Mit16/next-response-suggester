@@ -54,10 +54,19 @@ export type ValidatedSuggestionsOutput = z.infer<
   typeof SuggestionsOutputSchema
 >;
 
-export const SuggestionResultSchema = z.object({
-  context: ConversationContextSchema,
-  suggestions: z.array(ResponseSuggestionSchema).length(3),
-});
+export const SuggestionResultSchema = z.discriminatedUnion("status", [
+  z.object({
+    status: z.literal("suggestions"),
+    context: ConversationContextSchema,
+    suggestions: z.array(ResponseSuggestionSchema).length(3),
+  }).strict(),
+
+  z.object({
+    status: z.literal("no_action"),
+    context: ConversationContextSchema,
+    reason: z.string().trim().min(1).max(500),
+  }).strict(),
+]);
 
 export type ValidatedSuggestionResult = z.infer<
   typeof SuggestionResultSchema

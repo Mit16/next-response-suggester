@@ -20,7 +20,7 @@ export class InferenceOrchestrator {
   constructor(
     private readonly analyzer: ConversationAnalyzer,
     private readonly generator: ResponseGenerator,
-  ) {}
+  ) { }
 
   async execute(
     input: ConversationInput,
@@ -36,6 +36,7 @@ export class InferenceOrchestrator {
 
     // Step 3: Combine both outputs.
     const result = {
+      status: "suggestions" as const,
       context,
       suggestions,
     };
