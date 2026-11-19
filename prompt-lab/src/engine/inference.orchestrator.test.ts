@@ -41,7 +41,8 @@ const context: ConversationContext = {
   engagementLevel: "moderate",
   topic: "Daily experiences and tiredness.",
   conversationStage: "ongoing",
-  conversationDirection: "The conversation could move toward empathetic support.",
+  conversationDirection:
+    "The conversation could move toward empathetic support.",
   boundarySignals: [],
 };
 
@@ -65,7 +66,6 @@ const suggestions: ResponseSuggestion[] = [
 
 function createEngines() {
   const analyze = vi.fn().mockResolvedValue(context);
-
   const generate = vi.fn().mockResolvedValue(suggestions);
 
   const analyzer = {
@@ -137,7 +137,15 @@ describe("InferenceOrchestrator", () => {
     await orchestrator.execute(input);
 
     expect(generate).toHaveBeenCalledOnce();
-    expect(generate).toHaveBeenCalledWith(input, context);
+    expect(generate).toHaveBeenCalledWith(
+      input,
+      context,
+      {
+        blockedVibes: [],
+        constraints: [],
+        signals: [],
+      },
+    );
   });
 
   it("should execute analysis before generation", async () => {
@@ -218,15 +226,166 @@ describe("InferenceOrchestrator", () => {
     ).rejects.toBe(error);
   });
 
-  it("should reject invalid combined results", async () => {
+  it("should return no_action without calling the generator when safety blocks the conversation", async () => {
+    const {
+      analyzer,
+      generator,
+      generate,
+    } = createEngines();
+
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const blockedInput: ConversationInput = {
+      messages: [
+        {
+          role: "other",
+          content: "Please don't message me again.",
+        },
+      ],
+    };
+
+    const result = await orchestrator.execute(blockedInput);
+
+    expect(result.status).toBe("no_action");
+    expect(generate).not.toHaveBeenCalled();
+
+    if (result.status === "no_action") {
+      expect(result.reason).toBeTruthy();
+    }
+  });
+
+  it("should apply the effective vibe and goal before generation", async () => {
+    const {
+      analyzer,
+      generator,
+      generate,
+    } = createEngines();
+
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const inputWithRomanticRejection: ConversationInput = {
+      messages: [
+        {
+          role: "other",
+          content: "I only see you as a friend.",
+        },
+      ],
+      requestedVibe: "flirty",
+      requestedGoal: "ask_out",
+    };
+
+    await orchestrator.execute(inputWithRomanticRejection);
+
+    expect(generate).toHaveBeenCalledOnce();
+
+    expect(generate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestedVibe: "normal",
+        requestedGoal: "continue_conversation",
+      }),
+      context,
+      expect.objectContaining({
+        blockedVibes: expect.arrayContaining([
+          "flirty",
+          "romantic",
+        ]),
+        constraints: expect.arrayContaining([
+          "Do not pursue romantic or flirtatious interaction.",
+          "Respect the rejection without trying to change the other person's mind.",
+        ]),
+        signals: expect.arrayContaining([
+          "romantic_rejection",
+        ]),
+      }),
+    );
+  });
+
+  it("should preserve the original input object when applying safety overrides", async () => {
     const {
       analyzer,
       generator,
     } = createEngines();
 
-    const invalidSuggestions = [
-      ...suggestions.slice(0, 2),
-    ];
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const originalInput: ConversationInput = {
+      messages: [
+        {
+          role: "other",
+          content: "I only see you as a friend.",
+        },
+      ],
+      requestedVibe: "flirty",
+      requestedGoal: "ask_out",
+    };
+
+    await orchestrator.execute(originalInput);
+
+    expect(originalInput.requestedVibe).toBe("flirty");
+    expect(originalInput.requestedGoal).toBe("ask_out");
+  });
+
+
+  it("should pass safety metadata to the generator", async () => {
+    const { analyzer, generator, generate } = createEngines();
+
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const rejectionInput: ConversationInput = {
+      messages: [
+        {
+          role: "self",
+          content: "Would you like to go out sometime?",
+        },
+        {
+          role: "other",
+          content: "I only see you as a friend.",
+        },
+      ],
+      requestedVibe: "flirty",
+      requestedGoal: "ask_out",
+    };
+
+    await orchestrator.execute(rejectionInput);
+
+    expect(generate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestedVibe: "normal",
+        requestedGoal: "continue_conversation",
+      }),
+      context,
+      expect.objectContaining({
+        blockedVibes: expect.arrayContaining([
+          "flirty",
+          "romantic",
+        ]),
+        signals: expect.arrayContaining([
+          "romantic_rejection",
+        ]),
+        constraints: expect.any(Array),
+      }),
+    );
+  });
+
+
+  it("should reject invalid combined results", async () => {
+    const {
+      analyzer,
+    } = createEngines();
+
+    const invalidSuggestions = suggestions.slice(0, 2);
 
     const invalidGenerator = {
       generate: vi.fn().mockResolvedValue(invalidSuggestions),

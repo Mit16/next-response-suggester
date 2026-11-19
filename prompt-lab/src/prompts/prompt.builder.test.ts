@@ -1,3 +1,4 @@
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -9,6 +10,10 @@ import type {
     ConversationContext,
     ConversationInput,
 } from "../types/conversation.types.js";
+
+import type {
+    GenerationSafety,
+} from "../types/safety.types.js";
 
 const sampleInput: ConversationInput = {
     messages: [
@@ -33,6 +38,15 @@ const sampleContext: ConversationContext = {
     conversationStage: "getting_to_know",
     conversationDirection: "The conversation can continue naturally.",
     boundarySignals: [],
+};
+
+const sampleSafety: GenerationSafety = {
+    blockedVibes: ["flirty", "romantic"],
+    constraints: [
+        "Do not pursue romantic interest after rejection.",
+        "Keep the conversation respectful and non-romantic.",
+    ],
+    signals: ["romantic_rejection"],
 };
 
 describe("buildAnalyzerMessages", () => {
@@ -89,6 +103,15 @@ describe("buildAnalyzerMessages", () => {
         expect(serializedInput).not.toContain("requestedGoal");
         expect(serializedInput).not.toContain("expectedContext");
         expect(serializedInput).not.toContain("expectedBehavior");
+    });
+
+    it("should not include generation safety metadata in analyzer input", () => {
+        const messages = buildAnalyzerMessages(sampleInput);
+        const serializedInput = messages[1].content;
+
+        expect(serializedInput).not.toContain("safetyPolicy");
+        expect(serializedInput).not.toContain("blockedVibes");
+        expect(serializedInput).not.toContain("constraints");
     });
 });
 
@@ -181,5 +204,104 @@ describe("buildGeneratorMessages", () => {
         expect(serializedInput).not.toContain("expectedContext");
         expect(serializedInput).not.toContain("expectedBehavior");
         expect(serializedInput).not.toContain("evaluationCriteria");
+    });
+
+    it("should include safety metadata when provided", () => {
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+            sampleSafety,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload.safetyPolicy).toEqual({
+            blockedVibes: ["flirty", "romantic"],
+            constraints: [
+                "Do not pursue romantic interest after rejection.",
+                "Keep the conversation respectful and non-romantic.",
+            ],
+            signals: ["romantic_rejection"],
+        });
+    });
+
+    it("should preserve all blocked vibes and safety constraints", () => {
+        const safety: GenerationSafety = {
+            blockedVibes: ["flirty", "romantic", "funny"],
+            constraints: [
+                "Do not pursue romantic interest.",
+                "Do not use humor in this situation.",
+            ],
+            signals: ["romantic_rejection", "emotional_distress"],
+        };
+
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+            safety,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload.safetyPolicy.blockedVibes).toEqual(
+            safety.blockedVibes,
+        );
+        expect(payload.safetyPolicy.constraints).toEqual(
+            safety.constraints,
+        );
+        expect(payload.safetyPolicy.signals).toEqual(
+            safety.signals,
+        );
+    });
+
+    it("should omit safety metadata when not provided", () => {
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload).not.toHaveProperty("safetyPolicy");
+    });
+
+    it("should instruct the model to prioritize safety constraints", () => {
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+            sampleSafety,
+        );
+
+        expect(messages[0].content).toContain(
+            "Safety constraints take priority",
+        );
+
+        expect(messages[0].content).toContain(
+            "Never generate content using a blocked vibe.",
+        );
+    });
+
+    it("should preserve requested vibe and goal alongside safety metadata", () => {
+        const input: ConversationInput = {
+            ...sampleInput,
+            requestedVibe: "flirty",
+            requestedGoal: "ask_out",
+        };
+
+        const messages = buildGeneratorMessages(
+            input,
+            sampleContext,
+            sampleSafety,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload.requestedVibe).toBe("flirty");
+        expect(payload.requestedGoal).toBe("ask_out");
+        expect(payload.safetyPolicy).toEqual({
+            blockedVibes: sampleSafety.blockedVibes,
+            constraints: sampleSafety.constraints,
+            signals: sampleSafety.signals,
+        });
     });
 });
