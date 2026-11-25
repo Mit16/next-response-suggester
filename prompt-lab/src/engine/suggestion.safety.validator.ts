@@ -8,6 +8,7 @@ import type {
 } from "../types/safety.types.js";
 
 export type SafetyViolation =
+  | "blocked_vibe"
   | "romantic_pursuit"
   | "inappropriate_humor"
   | "pressure_or_coercion"
@@ -65,6 +66,12 @@ export class SuggestionSafetyValidator {
     const violations = new Set<SafetyViolation>();
     const text = suggestion.text;
 
+    // Rule 1: The declared vibe must not be blocked.
+    if (safety.blockedVibes.includes(suggestion.vibe)) {
+      violations.add("blocked_vibe");
+    }
+
+    // Rule 2: Romantic pursuit is prohibited after rejection.
     if (
       safety.signals.includes("romantic_rejection") &&
       matchesAny(text, ROMANTIC_PURSUIT_PATTERNS)
@@ -72,6 +79,7 @@ export class SuggestionSafetyValidator {
       violations.add("romantic_pursuit");
     }
 
+    // Rule 3: Inappropriate humor is prohibited during distress.
     if (
       safety.signals.includes("emotional_distress") &&
       matchesAny(text, INAPPROPRIATE_HUMOR_PATTERNS)
@@ -79,10 +87,12 @@ export class SuggestionSafetyValidator {
       violations.add("inappropriate_humor");
     }
 
+    // Rule 4: Coercive language is always prohibited.
     if (matchesAny(text, PRESSURE_PATTERNS)) {
       violations.add("pressure_or_coercion");
     }
 
+    // Rule 5: Disrespecting boundaries is always prohibited.
     if (matchesAny(text, BOUNDARY_DISRESPECT_PATTERNS)) {
       violations.add("boundary_disrespect");
     }

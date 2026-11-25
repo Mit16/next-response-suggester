@@ -5,6 +5,7 @@ import type {
 } from "../providers/provider.interface.js";
 
 import type {
+  GenerationFeedback,
   GenerationSafety,
 } from "../types/safety.types.js";
 
@@ -43,9 +44,10 @@ export class ResponseGenerator {
     input: ConversationInput,
     context: ConversationContext,
     safety?: GenerationSafety,
+    feedback?: GenerationFeedback,
   ): Promise<ResponseSuggestion[]> {
     const completionOptions: AICompletionOptions = {
-      messages: buildGeneratorMessages(input, context, safety),
+      messages: buildGeneratorMessages(input, context, safety, feedback),
       model: this.options.model,
       temperature: this.options.temperature ?? 0.7,
       maxTokens: this.options.maxTokens ?? 1200,

@@ -13,6 +13,7 @@ import type {
 
 import type {
     GenerationSafety,
+    GenerationFeedback
 } from "../types/safety.types.js";
 
 const sampleInput: ConversationInput = {
@@ -303,5 +304,64 @@ describe("buildGeneratorMessages", () => {
             constraints: sampleSafety.constraints,
             signals: sampleSafety.signals,
         });
+    });
+
+    it("should include regeneration feedback when provided", () => {
+        const feedback: GenerationFeedback = {
+            attempt: 1,
+            violations: [
+                "romantic_pursuit",
+                "pressure_or_coercion",
+            ],
+        };
+
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+            sampleSafety,
+            feedback,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload.regenerationFeedback).toEqual(feedback);
+
+        expect(messages[0].content).toContain(
+            "This is regeneration attempt 1.",
+        );
+
+        expect(messages[0].content).toContain(
+            "Correct every identified violation.",
+        );
+    });
+
+    it("should omit regeneration feedback when not provided", () => {
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload).not.toHaveProperty("regenerationFeedback");
+    });
+
+    it("should preserve safety constraints during regeneration", () => {
+        const feedback: GenerationFeedback = {
+            attempt: 2,
+            violations: ["blocked_vibe"],
+        };
+
+        const messages = buildGeneratorMessages(
+            sampleInput,
+            sampleContext,
+            sampleSafety,
+            feedback,
+        );
+
+        const payload = JSON.parse(messages[1].content);
+
+        expect(payload.safetyPolicy).toEqual(sampleSafety);
+        expect(payload.regenerationFeedback).toEqual(feedback);
     });
 });

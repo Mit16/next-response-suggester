@@ -182,4 +182,51 @@ describe("SuggestionSafetyValidator", () => {
     expect(result.violations).toContain("romantic_pursuit");
     expect(result.violations).toContain("pressure_or_coercion");
   });
+
+
+  it("should reject a suggestion with a blocked declared vibe", () => {
+    const suggestion = createSuggestion(
+      "That sounds interesting. Tell me more.",
+      "flirty",
+    );
+
+    const result = validator.validate(
+      suggestion,
+      romanticRejectionSafety,
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.violations).toContain("blocked_vibe");
+  });
+
+  it("should reject a blocked vibe even when the suggestion text looks harmless", () => {
+    const suggestion = createSuggestion(
+      "Hope you have a lovely day.",
+      "romantic",
+    );
+
+    const result = validator.validate(
+      suggestion,
+      romanticRejectionSafety,
+    );
+
+    expect(result.valid).toBe(false);
+    expect(result.violations).toContain("blocked_vibe");
+  });
+
+  it("should allow a vibe that is not included in blocked vibes", () => {
+    const suggestion = createSuggestion(
+      "I respect your feelings.",
+      "normal",
+    );
+
+    const result = validator.validate(
+      suggestion,
+      romanticRejectionSafety,
+    );
+
+    expect(result.valid).toBe(true);
+    expect(result.violations).toEqual([]);
+  });
+
 });

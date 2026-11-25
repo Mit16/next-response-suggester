@@ -8,3 +8,8 @@ export interface GenerationSafety {
   constraints: string[];
   signals: string[];
 }
+
+export interface GenerationFeedback {
+  attempt: number;
+  violations: string[];
+}

@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   InferenceOrchestrator,
+  SuggestionSafetyError,
 } from "./inference.orchestrator.js";
 
 import type {
@@ -145,6 +146,7 @@ describe("InferenceOrchestrator", () => {
         constraints: [],
         signals: [],
       },
+      undefined,
     );
   });
 
@@ -303,6 +305,7 @@ describe("InferenceOrchestrator", () => {
           "romantic_rejection",
         ]),
       }),
+      undefined,
     );
   });
 
@@ -376,6 +379,7 @@ describe("InferenceOrchestrator", () => {
         ]),
         constraints: expect.any(Array),
       }),
+      undefined,
     );
   });
 
@@ -400,6 +404,155 @@ describe("InferenceOrchestrator", () => {
       orchestrator.execute(input),
     ).rejects.toThrow(
       "invalid suggestion result",
+    );
+  });
+
+  it("should regenerate unsafe suggestions and return the next valid set", async () => {
+    const {
+      analyzer,
+      generator,
+      generate,
+    } = createEngines();
+
+    const unsafeSuggestions: ResponseSuggestion[] = [
+      {
+        text: "I know you said no, but give us a chance.",
+        vibe: "flirty",
+        explanation: "Unsafe romantic pursuit.",
+      },
+      ...suggestions.slice(1),
+    ];
+
+    generate
+      .mockResolvedValueOnce(unsafeSuggestions)
+      .mockResolvedValueOnce(suggestions);
+
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const rejectionInput: ConversationInput = {
+      messages: [
+        {
+          role: "self",
+          content: "Would you like to go out sometime?",
+        },
+        {
+          role: "other",
+          content: "I only see you as a friend.",
+        },
+      ],
+      requestedVibe: "flirty",
+      requestedGoal: "ask_out",
+    };
+
+    const result = await orchestrator.execute(rejectionInput);
+
+    expect(result.status).toBe("suggestions");
+
+    if (result.status === "suggestions") {
+      expect(result.suggestions).toEqual(suggestions);
+    }
+
+    expect(generate).toHaveBeenCalledTimes(2);
+
+    expect(generate).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        requestedVibe: "normal",
+        requestedGoal: "continue_conversation",
+      }),
+      context,
+      expect.objectContaining({
+        signals: expect.arrayContaining([
+          "romantic_rejection",
+        ]),
+      }),
+      {
+        attempt: 1,
+        violations: expect.arrayContaining([
+          "blocked_vibe",
+          "romantic_pursuit",
+        ]),
+      },
+    );
+  });
+
+  it("should throw SuggestionSafetyError when all generation attempts fail validation", async () => {
+    const {
+      analyzer,
+      generator,
+      generate,
+    } = createEngines();
+
+    const unsafeSuggestions: ResponseSuggestion[] = [
+      {
+        text: "I know you said no, but give us a chance.",
+        vibe: "flirty",
+        explanation: "Unsafe romantic pursuit.",
+      },
+      ...suggestions.slice(1),
+    ];
+
+    generate.mockResolvedValue(unsafeSuggestions);
+
+    const orchestrator = new InferenceOrchestrator(
+      analyzer,
+      generator,
+    );
+
+    const rejectionInput: ConversationInput = {
+      messages: [
+        {
+          role: "other",
+          content: "I only see you as a friend.",
+        },
+      ],
+      requestedVibe: "flirty",
+      requestedGoal: "ask_out",
+    };
+
+    await expect(
+      orchestrator.execute(rejectionInput),
+    ).rejects.toMatchObject({
+      name: "SuggestionSafetyError",
+      attempts: 3,
+      violations: expect.arrayContaining([
+        "blocked_vibe",
+        "romantic_pursuit",
+      ]),
+    });
+
+    // One initial generation + two retries.
+    expect(generate).toHaveBeenCalledTimes(3);
+
+    expect(generate).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Object),
+      context,
+      expect.any(Object),
+      {
+        attempt: 1,
+        violations: expect.arrayContaining([
+          "blocked_vibe",
+          "romantic_pursuit",
+        ]),
+      },
+    );
+
+    expect(generate).toHaveBeenNthCalledWith(
+      3,
+      expect.any(Object),
+      context,
+      expect.any(Object),
+      {
+        attempt: 2,
+        violations: expect.arrayContaining([
+          "blocked_vibe",
+          "romantic_pursuit",
+        ]),
+      },
     );
   });
 });
