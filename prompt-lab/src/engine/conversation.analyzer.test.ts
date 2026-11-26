@@ -112,7 +112,7 @@ describe("ConversationAnalyzer", () => {
     const analyzer = new ConversationAnalyzer(provider, {
       model: "test-model",
       temperature: 0.2,
-      maxTokens: 1000,
+      maxTokens: 500,
     });
 
     await analyzer.analyze(conversationInput);
@@ -120,7 +120,7 @@ describe("ConversationAnalyzer", () => {
     expect(generate).toHaveBeenCalledWith(
       expect.objectContaining({
         temperature: 0.2,
-        maxTokens: 1000,
+        maxTokens: 500,
       }),
     );
   });
@@ -139,7 +139,7 @@ describe("ConversationAnalyzer", () => {
     expect(generate).toHaveBeenCalledWith(
       expect.objectContaining({
         temperature: 0.1,
-        maxTokens: 800,
+        maxTokens: 500,
       }),
     );
   });

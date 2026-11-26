@@ -50,7 +50,7 @@ export class ResponseGenerator {
       messages: buildGeneratorMessages(input, context, safety, feedback),
       model: this.options.model,
       temperature: this.options.temperature ?? 0.7,
-      maxTokens: this.options.maxTokens ?? 1200,
+      maxTokens: this.options.maxTokens ?? 500,
       responseFormat: "json",
     };
 

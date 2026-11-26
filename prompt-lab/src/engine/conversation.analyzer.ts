@@ -42,7 +42,7 @@ export class ConversationAnalyzer {
       messages: buildAnalyzerMessages(input),
       model: this.options.model,
       temperature: this.options.temperature ?? 0.1,
-      maxTokens: this.options.maxTokens ?? 800,
+      maxTokens: this.options.maxTokens ?? 500,
       responseFormat: "json",
     };
 

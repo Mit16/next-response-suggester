@@ -145,7 +145,7 @@ describe("ResponseGenerator", () => {
     const generator = new ResponseGenerator(provider, {
       model: "test-model",
       temperature: 0.5,
-      maxTokens: 1500,
+      maxTokens: 500,
     });
 
     await generator.generate(
@@ -156,7 +156,7 @@ describe("ResponseGenerator", () => {
     expect(generate).toHaveBeenCalledWith(
       expect.objectContaining({
         temperature: 0.5,
-        maxTokens: 1500,
+        maxTokens: 500,
       }),
     );
   });
@@ -178,7 +178,7 @@ describe("ResponseGenerator", () => {
     expect(generate).toHaveBeenCalledWith(
       expect.objectContaining({
         temperature: 0.7,
-        maxTokens: 1200,
+        maxTokens: 500,
       }),
     );
   });

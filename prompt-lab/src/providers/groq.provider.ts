@@ -57,16 +57,28 @@ export class GroqProvider implements AIProvider {
 
       const choice = response.choices[0];
 
-      if (!choice?.message.content) {
+      if (!choice) {
         throw new AIProviderError(
-          "Groq returned an empty response.",
+          "Groq returned no completion choices.",
+          this.name,
+          false,
+        );
+      }
+
+      const content = choice.message.content;
+
+      if (typeof content !== "string" || content.trim().length === 0) {
+        throw new AIProviderError(
+          `Groq returned no text content. Finish reason: ${choice.finish_reason ?? "unknown"
+          }. Completion tokens: ${response.usage?.completion_tokens ?? "unknown"
+          }.`,
           this.name,
           false,
         );
       }
 
       return {
-        content: choice.message.content,
+        content,
         model: response.model,
         finishReason: choice.finish_reason,
         usage: {
@@ -83,9 +95,9 @@ export class GroqProvider implements AIProvider {
 
       const statusCode =
         typeof error === "object" &&
-        error !== null &&
-        "status" in error &&
-        typeof error.status === "number"
+          error !== null &&
+          "status" in error &&
+          typeof error.status === "number"
           ? error.status
           : undefined;
 

@@ -9,11 +9,13 @@
     "lab:dev": "npm run dev --workspace=@next-response/prompt-lab",
     "lab:build": "npm run build --workspace=@next-response/prompt-lab",
     "lab:test": "npm run test --workspace=@next-response/prompt-lab",
-    "lab:typecheck": "npm run typecheck --workspace=@next-response/prompt-lab"
+    "lab:typecheck": "npm run typecheck --workspace=@next-response/prompt-lab",
+    "lab:smoke": "npm run smoke --workspace=@next-response/prompt-lab"
   },
   "dependencies": {
     "dotenv": "^18.0.10",
     "groq-sdk": "^1.6.0",
+    "openai": "^7.64.0",
     "pino": "^10.4.0",
     "zod": "^4.6.7"
   },
